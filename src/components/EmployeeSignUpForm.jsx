@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Colors } from '../utils/CustomCss';
+import {Colors} from '../utils/CustomCss';
 
 const SignUpForm = () => {
   const [fullName, setFullName] = useState('');
@@ -21,89 +28,134 @@ const SignUpForm = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
-        <Icon name="building" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="building"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Company Name"
           placeholderTextColor="#aaa"
           value={companyName}
-          onChangeText={(text) => setCompanyName(text)}
+          onChangeText={text => setCompanyName(text)}
         />
       </View>
-      
+
       <View style={styles.inputContainer}>
-        <Icon name="at" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="at"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#aaa"
           keyboardType="email-address"
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={text => setEmail(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="lock" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="lock"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#aaa"
           secureTextEntry
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
         />
-        <Icon name="eye" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="eye"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="lock" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="lock"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           placeholderTextColor="#aaa"
           secureTextEntry
           value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
+          onChangeText={text => setConfirmPassword(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="industry" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="industry"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Industry"
           placeholderTextColor="#aaa"
           value={industry}
-          onChangeText={(text) => setIndustry(text)}
+          onChangeText={text => setIndustry(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="info" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="info"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Description"
           placeholderTextColor="#aaa"
           value={description}
-          onChangeText={(text) => setDescription(text)}
+          onChangeText={text => setDescription(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="phone" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="phone"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Contact Information"
           placeholderTextColor="#aaa"
           value={contactInformation}
-          onChangeText={(text) => setContactInformation(text)}
+          onChangeText={text => setContactInformation(text)}
         />
       </View>
 
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUpPress}>
         <Text style={styles.signUpButtonText}>Sign Up</Text>
-        <Icon name="sign-in-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="sign-in-alt"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
       </TouchableOpacity>
     </ScrollView>
   );

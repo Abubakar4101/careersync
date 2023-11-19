@@ -1,23 +1,37 @@
-import React, { useState } from 'react';
-import { View, StatusBar, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Keyboard,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Colors } from '../utils/CustomCss';
+import {Colors} from '../utils/CustomCss';
 import * as Animatable from 'react-native-animatable';
 
-
-const FancyToast = ({ message }) => (
-  <Animatable.View style={styles.fancyToastContainer}
+const FancyToast = ({message}) => (
+  <Animatable.View
+    style={styles.fancyToastContainer}
     animation="fadeIn"
     duration={500}
-    delay={500}
-    >
-    <Icon name="check-circle" size={20} color={Colors.Light.TEXT} style={styles.toastIcon} />
+    delay={500}>
+    <Icon
+      name="check-circle"
+      size={20}
+      color={Colors.Light.TEXT}
+      style={styles.toastIcon}
+    />
     <Text style={styles.fancyToastText}>{message}</Text>
   </Animatable.View>
 );
 
 const SignInForm = () => {
-  const [isForgotPasswordModalVisible, setForgotPasswordModalVisible] = useState(false);
+  const [isForgotPasswordModalVisible, setForgotPasswordModalVisible] =
+    useState(false);
   const [showFancyToast, setShowFancyToast] = useState(false);
 
   const toggleForgotPasswordModal = () => {
@@ -25,6 +39,7 @@ const SignInForm = () => {
   };
 
   const handleSendResetLink = () => {
+    Keyboard.dismiss();
     toggleForgotPasswordModal();
     setShowFancyToast(true);
     setTimeout(() => {
@@ -34,10 +49,17 @@ const SignInForm = () => {
 
   return (
     <>
-      {isForgotPasswordModalVisible && <StatusBar backgroundColor='rgba(0, 0, 0, 0.5)' />}
+      {isForgotPasswordModalVisible && (
+        <StatusBar backgroundColor="rgba(0, 0, 0, 0.5)" />
+      )}
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <Icon name="user" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name="user"
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.input}
             placeholder="Company/Email"
@@ -46,14 +68,24 @@ const SignInForm = () => {
         </View>
 
         <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name="lock"
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.input}
             placeholder="Password"
             placeholderTextColor="#aaa"
             secureTextEntry
           />
-          <Icon name="eye" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name="eye"
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
         </View>
 
         <TouchableOpacity onPress={toggleForgotPasswordModal}>
@@ -62,25 +94,28 @@ const SignInForm = () => {
 
         <TouchableOpacity style={styles.signInButton}>
           <Text style={styles.signInButtonText}>Sign In</Text>
-          <Icon name="sign-in-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name="sign-in-alt"
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
         </TouchableOpacity>
 
         {showFancyToast && <FancyToast message="Password Reset Link Sent" />}
-
 
         {/* Forgot Password Modal */}
         <Modal
           animationType="slide"
           transparent={true}
           visible={isForgotPasswordModalVisible}
-          onRequestClose={toggleForgotPasswordModal}
-        >
-
+          onRequestClose={toggleForgotPasswordModal}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Forgot Password?</Text>
               <Text style={styles.modalText}>
-                Enter your email address and we'll send you a link to reset your password.
+                Enter your email address and we'll send you a link to reset your
+                password.
               </Text>
               <TextInput
                 style={styles.modalInput}
@@ -88,7 +123,9 @@ const SignInForm = () => {
                 placeholderTextColor="#aaa"
                 keyboardType="email-address"
               />
-              <TouchableOpacity style={styles.modalButton} onPress={handleSendResetLink} >
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleSendResetLink}>
                 <Text style={styles.modalButtonText}>Send Reset Link</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={toggleForgotPasswordModal}>
@@ -98,7 +135,6 @@ const SignInForm = () => {
           </View>
         </Modal>
       </View>
-
     </>
   );
 };
@@ -198,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 25,
-    transform: [{ translateY: 100}],
+    transform: [{translateY: 100}],
     borderRadius: 10,
     borderLeftWidth: 5,
     borderLeftColor: Colors.Light.Text,
