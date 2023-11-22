@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Modal, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../utils/CustomCss';
+import { save } from '../hooks/useCandidateData';
 
 const SignUpForm = () => {
   const [fullName, setFullName] = useState('');
@@ -9,10 +10,25 @@ const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [jobLocations, setJobLocations] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
-  const handleSignUpPress = () => {
-    console.log('Sign Up pressed');
+  const handleSignUpPress = async () => {
+    setLoading(true);
+
+    const result = await save(fullName, email, password, confirmPassword, jobLocations);
+
+    setLoading(false);
+
+    setAlertMessage(result.message);
+    setModalVisible(true);
   };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -76,8 +92,14 @@ const SignUpForm = () => {
       </View>
 
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUpPress}>
-        <Text style={styles.signUpButtonText}>Sign Up</Text>
-        <Icon name="sign-in-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.Light.TEXT} />
+        ) : (
+          <>
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+            <Icon name="sign-in-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          </>
+        )}
       </TouchableOpacity>
 
       <View style={styles.lineContainer}>
@@ -95,6 +117,22 @@ const SignUpForm = () => {
         <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
         <Text style={styles.socialButtonText}>Continue with GitHub</Text>
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{alertMessage}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -162,6 +200,36 @@ const styles = StyleSheet.create({
     color: Colors.Light.TEXT,
     fontSize: 16,
     marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: Colors.Light.PRIMARY,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    color: Colors.Light.TEXT,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: Colors.Light.SECONDARY,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 4,
+  },
+  modalButtonText: {
+    color: Colors.Light.TEXT,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

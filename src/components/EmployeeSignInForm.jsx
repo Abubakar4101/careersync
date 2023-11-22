@@ -37,7 +37,7 @@ const SignInForm = () => {
       {isForgotPasswordModalVisible && <StatusBar backgroundColor='rgba(0, 0, 0, 0.5)' />}
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <Icon name="user" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon name="building" size={20} color={Colors.Light.TEXT} style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Company/Email"
