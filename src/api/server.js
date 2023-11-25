@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 // Routes
 app.use('/api/candidate', require('./routes/Candidate'));
+app.use('/api/employer', require('./routes/Employer'));
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;

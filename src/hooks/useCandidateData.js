@@ -2,23 +2,21 @@ import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {endpoint} from './host';
-import { authorize, logout } from 'react-native-app-auth';
-
+import {authorize, logout} from 'react-native-app-auth';
 
 const config = {
   redirectUrl: 'com.careersync://oauthredirect',
   clientId: 'Iv1.d3ef10cea4470ebd',
   clientSecret: '05d2c63686ab802f6ae2f24512bd4d94b5ecfd74',
-  scopes: ["identity", "user:email", "user:follow"],
-  additionalHeaders: { 'Accept': 'application/json' },
+  scopes: ['identity', 'user:email', 'user:follow'],
+  additionalHeaders: {Accept: 'application/json'},
   serviceConfiguration: {
     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
     tokenEndpoint: 'https://github.com/login/oauth/access_token',
     revocationEndpoint:
-      'https://github.com/settings/connections/applications/Iv1.d3ef10cea4470ebd'
-  }
+      'https://github.com/settings/connections/applications/Iv1.d3ef10cea4470ebd',
+  },
 };
-
 
 GoogleSignin.configure({
   webClientId:
@@ -110,15 +108,17 @@ export const githubLogin = async () => {
     const authState = await authorize(config);
 
     // Use the access token to authenticate with Firebase
-    const githubCredential = auth.GithubAuthProvider.credential(authState.accessToken);
+    const githubCredential = auth.GithubAuthProvider.credential(
+      authState.accessToken,
+    );
     const userCredential = await auth().signInWithCredential(githubCredential);
 
     // Handle successful authentication
     console.log('Logged in with GitHub:', userCredential.user);
-    return { success: true, message: 'Logged in with GitHub!' };
+    return {success: true, message: 'Logged in with GitHub!'};
   } catch (error) {
     console.error('GitHub Login Error:', error);
-    return { success: false, message: 'GitHub login failed. Please try again.' };
+    return {success: false, message: 'GitHub login failed. Please try again.'};
   }
 };
 
@@ -168,10 +168,10 @@ export const signOut = async () => {
 };
 
 export const githubLogout = async () => {
-  try{
+  try {
     await auth().signOut();
     return {success: true, message: 'Logged out successfully!'};
-  }catch(error){
+  } catch (error) {
     console.error(error);
   }
-}
+};

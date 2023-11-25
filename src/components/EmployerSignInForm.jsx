@@ -4,6 +4,7 @@ import {
   StatusBar,
   Text,
   TextInput,
+  ActivityIndicator,
   TouchableOpacity,
   StyleSheet,
   Modal,
@@ -11,40 +12,40 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors} from '../utils/CustomCss';
-import * as Animatable from 'react-native-animatable';
+import {verify} from '../hooks/useEmployerData';
 
-const FancyToast = ({message}) => (
-  <Animatable.View
-    style={styles.fancyToastContainer}
-    animation="fadeIn"
-    duration={500}
-    delay={500}>
-    <Icon
-      name="check-circle"
-      size={20}
-      color={Colors.Light.TEXT}
-      style={styles.toastIcon}
-    />
-    <Text style={styles.fancyToastText}>{message}</Text>
-  </Animatable.View>
-);
-
-const SignInForm = () => {
+const EmployerSignInForm = ({showToast}) => {
   const [isForgotPasswordModalVisible, setForgotPasswordModalVisible] =
     useState(false);
-  const [showFancyToast, setShowFancyToast] = useState(false);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const toggleForgotPasswordModal = () => {
     setForgotPasswordModalVisible(!isForgotPasswordModalVisible);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSendResetLink = () => {
     Keyboard.dismiss();
+    showToast('Reset link sent to your email', true);
     toggleForgotPasswordModal();
-    setShowFancyToast(true);
-    setTimeout(() => {
-      setShowFancyToast(false);
-    }, 3000);
+  };
+
+  const handleSignIn = async () => {
+    Keyboard.dismiss();
+    try {
+      setLoading(true);
+      const result = await verify(email, password);
+      setLoading(false);
+      showToast(result.message, result.success);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
   };
 
   return (
@@ -54,11 +55,18 @@ const SignInForm = () => {
       )}
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <Icon name="user" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name="user"
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.input}
-            placeholder="Company/Email"
+            placeholder="Username/Email"
             placeholderTextColor="#aaa"
+            value={email}
+            onChangeText={text => setEmail(text)}
           />
         </View>
 
@@ -73,31 +81,43 @@ const SignInForm = () => {
             style={styles.input}
             placeholder="Password"
             placeholderTextColor="#aaa"
-            secureTextEntry
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={text => setPassword(text)}
           />
-          <Icon
-            name="eye"
-            size={20}
-            color={Colors.Light.TEXT}
-            style={styles.icon}
-          />
+          <TouchableOpacity onPress={togglePasswordVisibility}>
+            <Icon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              size={20}
+              color={Colors.Light.TEXT}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={toggleForgotPasswordModal}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        <View style={styles.forgotPasswordContainer}>
+          <Text
+            style={styles.forgotPasswordText}
+            onPress={toggleForgotPasswordModal}>
+            Forgot Password?
+          </Text>
+        </View>
 
-        <TouchableOpacity style={styles.signInButton}>
-          <Text style={styles.signInButtonText}>Sign In</Text>
-          <Icon
-            name="sign-in-alt"
-            size={20}
-            color={Colors.Light.TEXT}
-            style={styles.icon}
-          />
+        <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+          {loading ? (
+            <ActivityIndicator size="small" color={Colors.Light.TEXT} />
+          ) : (
+            <>
+              <Text style={styles.signInButtonText}>Sign In</Text>
+              <Icon
+                name="sign-in-alt"
+                size={20}
+                color={Colors.Light.TEXT}
+                style={styles.icon}
+              />
+            </>
+          )}
         </TouchableOpacity>
-
-        {showFancyToast && <FancyToast message="Password Reset Link Sent" />}
 
         {/* Forgot Password Modal */}
         <Modal
@@ -137,6 +157,8 @@ const SignInForm = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -155,6 +177,7 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     backgroundColor: Colors.Light.SECONDARY,
+    width: '100%',
     elevation: 4,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -169,11 +192,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 10,
   },
+  forgotPasswordContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+  },
   forgotPasswordText: {
     textAlign: 'right',
     color: Colors.Light.TEXT,
     fontSize: 14,
     marginBottom: 10,
+    textDecorationLine: 'underline',
   },
   modalContainer: {
     flex: 1,
@@ -224,27 +252,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
-  fancyToastContainer: {
-    backgroundColor: Colors.Light.SECONDARY,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 25,
-    transform: [{translateY: 100}],
-    borderRadius: 10,
-    borderLeftWidth: 5,
-    borderLeftColor: Colors.Light.Text,
-    elevation: 4,
-    zIndex: 999,
-  },
-  fancyToastText: {
-    color: Colors.Light.TEXT,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
-  toastIcon: {
-    marginRight: 10,
-  },
 });
 
-export default SignInForm;
+export default EmployerSignInForm;

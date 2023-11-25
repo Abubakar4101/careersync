@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Keyboard,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Colors } from '../utils/CustomCss';
-import { save, googleLogin, githubLogin, githubLogout } from '../hooks/useCandidateData';
+import {Colors} from '../utils/CustomCss';
+import {
+  save,
+  googleLogin,
+  githubLogin,
+  githubLogout,
+} from '../hooks/useCandidateData';
 
-const CandidateSignUpForm = ({ showToast }) => {
+const CandidateSignUpForm = ({showToast}) => {
   const [fullName, setFullName] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -13,16 +27,19 @@ const CandidateSignUpForm = ({ showToast }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-
   const handleSignUpPress = async () => {
-
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const result = await save(fullName, email, password, confirmPassword, jobLocations);
+      const result = await save(
+        fullName,
+        email,
+        password,
+        confirmPassword,
+        jobLocations,
+      );
       setLoading(false);
       showToast(result.message, result.success);
-
     } catch (error) {
       showToast(error.message, error.success);
     }
@@ -36,7 +53,7 @@ const CandidateSignUpForm = ({ showToast }) => {
     } catch (error) {
       showToast(error.message, error.success);
     }
-  }
+  };
 
   const handleGithubLogin = async () => {
     Keyboard.dismiss();
@@ -46,7 +63,7 @@ const CandidateSignUpForm = ({ showToast }) => {
     } catch (error) {
       showToast(error.message, error.success);
     }
-  }
+  };
   const handleGithubLogout = async () => {
     Keyboard.dismiss();
     try {
@@ -55,7 +72,7 @@ const CandidateSignUpForm = ({ showToast }) => {
     } catch (error) {
       showToast(error.message, error.success);
     }
-  }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -64,63 +81,93 @@ const CandidateSignUpForm = ({ showToast }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
-        <Icon name="user" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="user"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Full Name"
           placeholderTextColor="#aaa"
           value={fullName}
-          onChangeText={(text) => setFullName(text)}
+          onChangeText={text => setFullName(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="at" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="at"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#aaa"
           keyboardType="email-address"
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={text => setEmail(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="lock" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="lock"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#aaa"
           secureTextEntry={!showPassword}
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
         />
         <TouchableOpacity onPress={togglePasswordVisibility}>
-          <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Icon
+            name={showPassword ? 'eye-slash' : 'eye'}
+            size={20}
+            color={Colors.Light.TEXT}
+            style={styles.icon}
+          />
         </TouchableOpacity>
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="lock" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="lock"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           placeholderTextColor="#aaa"
           secureTextEntry={!showPassword}
           value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
+          onChangeText={text => setConfirmPassword(text)}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Icon name="map-marker-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="map-marker-alt"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Preferred Job Locations"
           placeholderTextColor="#aaa"
           value={jobLocations}
-          onChangeText={(text) => setJobLocations(text)}
+          onChangeText={text => setJobLocations(text)}
         />
       </View>
 
@@ -130,7 +177,12 @@ const CandidateSignUpForm = ({ showToast }) => {
         ) : (
           <>
             <Text style={styles.signUpButtonText}>Sign Up</Text>
-            <Icon name="sign-in-alt" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+            <Icon
+              name="sign-in-alt"
+              size={20}
+              color={Colors.Light.TEXT}
+              style={styles.icon}
+            />
           </>
         )}
       </TouchableOpacity>
@@ -142,20 +194,36 @@ const CandidateSignUpForm = ({ showToast }) => {
       </View>
 
       <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
-          <Icon name="google" size={20} color={Colors.Light.TEXT} style={styles.icon} />
-          <Text style={styles.socialButtonText}>Continue with Google</Text>
-        </TouchableOpacity>
+        <Icon
+          name="google"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
+        <Text style={styles.socialButtonText}>Continue with Google</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.socialButton} onPress={handleGithubLogin}>
-        <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Icon
+          name="github"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <Text style={styles.socialButtonText}>Continue with GitHub</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.socialButton} onPress={handleGithubLogout}>
-        <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+      <TouchableOpacity
+        style={styles.socialButton}
+        onPress={handleGithubLogout}>
+        <Icon
+          name="github"
+          size={20}
+          color={Colors.Light.TEXT}
+          style={styles.icon}
+        />
         <Text style={styles.socialButtonText}>logout GitHub</Text>
       </TouchableOpacity>
-
     </ScrollView>
   );
 };
@@ -227,7 +295,7 @@ const styles = StyleSheet.create({
     color: Colors.Light.TEXT,
     fontSize: 16,
     marginLeft: 10,
-  }
+  },
 });
 
 export default CandidateSignUpForm;
