@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "842237236935",
+    "firebase_url": "https://careersync-cb98a-default-rtdb.firebaseio.com",
     "project_id": "careersync-cb98a",
     "storage_bucket": "careersync-cb98a.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.careersync"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "842237236935-tje6pkdk5evbjkk2n2ja9qjir35bmoqj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.careersync",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "842237236935-1v2iumctagpgrbh17pavird1t7p2dk7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB4Mxb9TWsDhIVgjrGdbppKucjHbXkk9fY"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842237236935-1v2iumctagpgrbh17pavird1t7p2dk7k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

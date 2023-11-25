@@ -17,8 +17,7 @@ var candidateScheme = new mongoose.Schema({
         required:true,
     },
     candidate_location:{
-        type:String,
-        required:true,
+        type:String
     },
 });
 

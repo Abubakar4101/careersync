@@ -2,11 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Candidate = require('../models/Candidate');
 
-
-
-// Create a candidate
 router.post('/', async (req, res) => {
-    console.log(req.body);
+    console.log("In server: ", req.body);
     const candidate = new Candidate({
         candidate_ID: req.body.candidate_ID,
         candidate_email: req.body.candidate_email,

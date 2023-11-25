@@ -1,34 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Modal, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../utils/CustomCss';
-import { save } from '../hooks/useCandidateData';
+import { save, googleLogin, githubLogin, githubLogout } from '../hooks/useCandidateData';
 
-const SignUpForm = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [jobLocations, setJobLocations] = useState('');
+const CandidateSignUpForm = ({ showToast }) => {
+  const [fullName, setFullName] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState(null);
+  const [jobLocations, setJobLocations] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleSignUpPress = async () => {
-    setLoading(true);
 
-    const result = await save(fullName, email, password, confirmPassword, jobLocations);
+    Keyboard.dismiss();
+    try {
+      setLoading(true);
+      const result = await save(fullName, email, password, confirmPassword, jobLocations);
+      setLoading(false);
+      showToast(result.message, result.success);
 
-    setLoading(false);
-
-    setAlertMessage(result.message);
-    setModalVisible(true);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  const handleGoogleLogin = async () => {
+    Keyboard.dismiss();
+    try {
+      const result = await googleLogin();
+      showToast(result.message, result.success);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
+  }
 
+  const handleGithubLogin = async () => {
+    Keyboard.dismiss();
+    try {
+      const result = await githubLogin();
+      showToast(result.message, result.success);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
+  }
+  const handleGithubLogout = async () => {
+    Keyboard.dismiss();
+    try {
+      const result = await githubLogout();
+      showToast(result.message, result.success);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -61,11 +92,13 @@ const SignUpForm = () => {
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#aaa"
-          secureTextEntry
+          secureTextEntry={!showPassword}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <Icon name="eye" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.inputContainer}>
@@ -74,7 +107,7 @@ const SignUpForm = () => {
           style={styles.input}
           placeholder="Confirm Password"
           placeholderTextColor="#aaa"
-          secureTextEntry
+          secureTextEntry={!showPassword}
           value={confirmPassword}
           onChangeText={(text) => setConfirmPassword(text)}
         />
@@ -93,7 +126,7 @@ const SignUpForm = () => {
 
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUpPress}>
         {loading ? (
-          <ActivityIndicator size="large" color={Colors.Light.TEXT} />
+          <ActivityIndicator size="small" color={Colors.Light.TEXT} />
         ) : (
           <>
             <Text style={styles.signUpButtonText}>Sign Up</Text>
@@ -108,31 +141,21 @@ const SignUpForm = () => {
         <View style={styles.line} />
       </View>
 
-      <TouchableOpacity style={styles.socialButton}>
-        <Icon name="google" size={20} color={Colors.Light.TEXT} style={styles.icon} />
-        <Text style={styles.socialButtonText}>Continue with Google</Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
+          <Icon name="google" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <Text style={styles.socialButtonText}>Continue with Google</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.socialButton}>
+      <TouchableOpacity style={styles.socialButton} onPress={handleGithubLogin}>
         <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
         <Text style={styles.socialButtonText}>Continue with GitHub</Text>
       </TouchableOpacity>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{alertMessage}</Text>
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <TouchableOpacity style={styles.socialButton} onPress={handleGithubLogout}>
+        <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+        <Text style={styles.socialButtonText}>logout GitHub</Text>
+      </TouchableOpacity>
+
     </ScrollView>
   );
 };
@@ -140,6 +163,8 @@ const SignUpForm = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -159,6 +184,7 @@ const styles = StyleSheet.create({
   signUpButton: {
     backgroundColor: Colors.Light.SECONDARY,
     elevation: 4,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: 10,
@@ -195,42 +221,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     marginBottom: 10,
+    width: '100%',
   },
   socialButtonText: {
     color: Colors.Light.TEXT,
     fontSize: 16,
     marginLeft: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: Colors.Light.PRIMARY,
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 18,
-    color: Colors.Light.TEXT,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  modalButton: {
-    backgroundColor: Colors.Light.SECONDARY,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    elevation: 4,
-  },
-  modalButtonText: {
-    color: Colors.Light.TEXT,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  }
 });
 
-export default SignUpForm;
+export default CandidateSignUpForm;

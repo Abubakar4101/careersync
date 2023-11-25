@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     gap: 5,
     width: '100%',
-    padding: 20,
+    padding: 15,
     borderRadius: 30,
     backgroundColor: Colors.Light.PRIMARY,
     elevation: 4,

@@ -2,35 +2,29 @@ import React, { useState } from 'react';
 import { View, StatusBar, Text, TextInput, ActivityIndicator, TouchableOpacity, StyleSheet, Modal, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../utils/CustomCss';
-import { verify } from '../hooks/useCandidateData';
-import Toast from '../components/Toast';
+import { verify, googleLogin, signOut } from '../hooks/useCandidateData';
 
 
-const SignInForm = () => {
+const CandidateSignInForm = ({ showToast }) => {
   const [isForgotPasswordModalVisible, setForgotPasswordModalVisible] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
-
-
+  const [showPassword, setShowPassword] = useState(false);
 
 
   const toggleForgotPasswordModal = () => {
     setForgotPasswordModalVisible(!isForgotPasswordModalVisible);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSendResetLink = () => {
     Keyboard.dismiss();
-    setToastMessage('Reset link sent to your email');
-    setSuccess(true);
+    showToast('Reset link sent to your email', true);
     toggleForgotPasswordModal();
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
   };
 
   const handleSignIn = async () => {
@@ -39,29 +33,26 @@ const SignInForm = () => {
       setLoading(true);
       const result = await verify(email, password)
       setLoading(false);
-      setToastMessage(result.message);
-      setSuccess(result.success);
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
+      showToast(result.message, result.success);
     } catch (error) {
-      console.log(error);
-      setToastMessage(error.message);
-      setSuccess(error.success);
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
+      showToast(error.message, error.success);
     }
+  }
 
+  const handleGoogleLogin = async () => {
+    Keyboard.dismiss();
+    try {
+      const result = await googleLogin();
+      showToast(result.message, result.success);
+    } catch (error) {
+      showToast(error.message, error.success);
+    }
   }
 
   return (
     <>
       {isForgotPasswordModalVisible && <StatusBar backgroundColor='rgba(0, 0, 0, 0.5)' />}
       <View style={styles.container}>
-        {showToast && <Toast message={toastMessage} success={success} />}
         <View style={styles.inputContainer}>
           <Icon name="user" size={20} color={Colors.Light.TEXT} style={styles.icon} />
           <TextInput
@@ -79,11 +70,13 @@ const SignInForm = () => {
             style={styles.input}
             placeholder="Password"
             placeholderTextColor="#aaa"
-            secureTextEntry
+            secureTextEntry={!showPassword}
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
-          <Icon name="eye" size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          <TouchableOpacity onPress={togglePasswordVisibility}>
+            <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color={Colors.Light.TEXT} style={styles.icon} />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.forgotPasswordContainer}>
@@ -108,12 +101,12 @@ const SignInForm = () => {
           <View style={styles.line} />
         </View>
 
-        <TouchableOpacity style={styles.socialButton}>
+        <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
           <Icon name="google" size={20} color={Colors.Light.TEXT} style={styles.icon} />
           <Text style={styles.socialButtonText}>Continue with Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialButton}>
+        <TouchableOpacity style={styles.socialButton} onPress={async () => await signOut()}>
           <Icon name="github" size={20} color={Colors.Light.TEXT} style={styles.icon} />
           <Text style={styles.socialButtonText}>Continue with GitHub</Text>
         </TouchableOpacity>
@@ -284,4 +277,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInForm;
+export default CandidateSignInForm;

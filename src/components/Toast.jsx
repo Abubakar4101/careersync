@@ -34,7 +34,9 @@ const Toast = ({ message, success }) => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: -200,
+        width: '100%',
+        alignSelf: 'center',
+        top: 50,
         zIndex: 999,
     },
     fancyToastContainer: {
