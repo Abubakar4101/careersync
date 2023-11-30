@@ -2,6 +2,7 @@ import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 import {endpoint} from './host';
 
+
 export const save = async (
   companyName,
   email,
@@ -35,26 +36,28 @@ export const save = async (
       };
     }
 
-    const userCredential = await auth().createUserWithEmailAndPassword(
+    await auth().createUserWithEmailAndPassword(
       email,
       password,
-    );
-    const response = await axios.post(endpoint('/api/employer'), {
-      employer_ID: userCredential.user.uid,
-      employer_companyName: companyName,
-      employer_email: email,
-      employer_industry: industry,
-      employer_description: description,
-      employer_contactInformation: contactInformation,
-    });
-    if (response.status === 201) {
-      return {success: true, message: 'Account created successfully!'};
-    } else {
-      return {
-        success: false,
-        message: 'Failed to create account. Please try again.',
-      };
-    }
+    ).then((userCredential) => {
+      auth().currentUser.sendEmailVerification();
+    })
+    // const response = await axios.post(endpoint('/api/employer'), {
+    //   employer_ID: userCredential.user.uid,
+    //   employer_companyName: companyName,
+    //   employer_email: email,
+    //   employer_industry: industry,
+    //   employer_description: description,
+    //   employer_contactInformation: contactInformation,
+    // });
+    // if (response.status === 201) {
+    //   return {success: true, message: 'Account created successfully!'};
+    // } else {
+    //   return {
+    //     success: false,
+    //     message: 'Failed to create account. Please try again.',
+    //   };
+    // }
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
       return {success: false, message: 'That email address is already in use!'};

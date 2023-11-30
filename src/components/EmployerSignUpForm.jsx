@@ -12,6 +12,8 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Colors} from '../utils/CustomCss';
 import {save} from '../hooks/useEmployerData';
+import { useNavigation } from '@react-navigation/native';
+
 
 const EmployerSignUpForm = ({showToast}) => {
   const [email, setEmail] = useState('');
@@ -23,6 +25,8 @@ const EmployerSignUpForm = ({showToast}) => {
   const [contactInformation, setContactInformation] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleSignUpPress = async () => {
     Keyboard.dismiss();
@@ -38,7 +42,7 @@ const EmployerSignUpForm = ({showToast}) => {
         contactInformation,
       );
       setLoading(false);
-      showToast(result.message, result.success);
+      navigation.navigate('EmailVerification');
     } catch (error) {
       showToast(error.message, error.success);
     }

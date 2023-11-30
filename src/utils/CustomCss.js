@@ -26,6 +26,7 @@ export const Colors = {
         TEXT: '#083344',
         PRIMARY: '#ecfeff',
         SECONDARY: '#cffafe',
+        TRIARY: '#06b6d4',
     },
     Dark:{
         TEXT: '#ecfeff',

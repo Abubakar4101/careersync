@@ -39,7 +39,8 @@ const CandidateSignUpForm = ({showToast}) => {
         jobLocations,
       );
       setLoading(false);
-      showToast(result.message, result.success);
+      result.success ? navigation.navigate('EmailVerification', {mode: "Candidate"}) : showToast(result.message, result.success);
+
     } catch (error) {
       showToast(error.message, error.success);
     }

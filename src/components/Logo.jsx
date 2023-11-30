@@ -3,8 +3,7 @@ import { View, StyleSheet, Animated, Image } from 'react-native';
 
 const Logo = ({ logo, animate, onAnimationComplete }) => {
   const heartbeatAnim = React.useRef(new Animated.Value(1)).current;
-  const fadeAnim = React.useRef(new Animated.Value(1)).current;
-  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+  const rotateAnim = React.useRef(new Animated.Value(0)).current;
 
   const displayedLogo =
     logo === 'light'
@@ -16,44 +15,38 @@ const Logo = ({ logo, animate, onAnimationComplete }) => {
       const heartbeatAnimation = Animated.sequence([
         Animated.timing(heartbeatAnim, {
           toValue: 1.5,
-          duration: 500, // Scale up quickly
+          duration: 500, 
           useNativeDriver: true,
         }),
         Animated.timing(heartbeatAnim, {
           toValue: 1,
-          duration: 500, // Scale down quickly
+          duration: 500, 
           useNativeDriver: true,
         }),
         Animated.timing(heartbeatAnim, {
           toValue: 1.2,
-          duration: 500, // Scale up moderately
+          duration: 500,
           useNativeDriver: true,
         }),
         Animated.timing(heartbeatAnim, {
           toValue: 1,
-          duration: 500, // Scale down moderately
+          duration: 500, 
           useNativeDriver: true,
         }),
         Animated.timing(heartbeatAnim, {
           toValue: 1.1,
-          duration: 500, // Scale up slowly
+          duration: 500, 
           useNativeDriver: true,
         }),
         Animated.timing(heartbeatAnim, {
           toValue: 1,
-          duration: 500, // Scale down slowly
+          duration: 500,
           useNativeDriver: true,
         }),
       ]);
 
-      const fadeAnimation = Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 1000,
-        useNativeDriver: true,
-      });
-
-      const scaleAnimation = Animated.timing(scaleAnim, {
-        toValue: 10,
+      const rotateAnimation = Animated.timing(rotateAnim, {
+        toValue: 360, 
         duration: 1000,
         useNativeDriver: true,
       });
@@ -63,7 +56,7 @@ const Logo = ({ logo, animate, onAnimationComplete }) => {
 
       setTimeout(() => {
         loopedAnimation.stop();
-        Animated.parallel([fadeAnimation, scaleAnimation]).start(() => onAnimationComplete());
+        rotateAnimation.start(() => onAnimationComplete());
       }, 6000);
 
       return () => {
@@ -71,6 +64,11 @@ const Logo = ({ logo, animate, onAnimationComplete }) => {
       };
     }
   }, [animate, heartbeatAnim]);
+
+  const interpolatedRotate = rotateAnim.interpolate({
+    inputRange: [0, 360],
+    outputRange: ['0deg', '360deg'],
+  });
 
   return (
     <View style={styles.container}>
@@ -84,10 +82,9 @@ const Logo = ({ logo, animate, onAnimationComplete }) => {
                 scale: heartbeatAnim,
               },
               {
-                scale: scaleAnim,
+                rotate: interpolatedRotate,
               },
             ],
-            opacity: fadeAnim,
           },
         ]}
       />

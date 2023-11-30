@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, StatusBar} from 'react-native';
 import Logo from '../components/Logo';
 import AuthHeader from '../components/AuthHeader';
 import EmployerSignInForm from '../components/EmployerSignInForm';
@@ -38,24 +38,27 @@ const LoginScreen = () => {
         <UserTypeSelectionScreen onUserTypeSelect={handleUserTypeSelect} />
       ) : (
         <>
-          {showToast && <Toast message={toastMessage} success={success} />}
-          <Logo logo={'dark'} animate={false} />
-          <AuthHeader
-            onSignInPress={() => setActiveForm('SignIn')}
-            onSignUpPress={() => setActiveForm('SignUp')}
-            activeForm={activeForm}
-          />
-          {activeForm === 'SignIn' ? (
-            userType === 'Employee' ? (
-              <EmployerSignInForm showToast={handleToast} />
+          <StatusBar backgroundColor={Colors.Light.PRIMARY} />
+          <View style={styles.loginContainer}>
+            {showToast && <Toast message={toastMessage} success={success} />}
+            <Logo logo={'dark'} animate={false} />
+            <AuthHeader
+              onSignInPress={() => setActiveForm('SignIn')}
+              onSignUpPress={() => setActiveForm('SignUp')}
+              activeForm={activeForm}
+            />
+            {activeForm === 'SignIn' ? (
+              userType === 'Employee' ? (
+                <EmployerSignInForm showToast={handleToast} />
+              ) : (
+                <CandidateSignInForm showToast={handleToast} />
+              )
+            ) : userType === 'Employee' ? (
+              <EmployerSignUpForm showToast={handleToast} />
             ) : (
-              <CandidateSignInForm showToast={handleToast} />
-            )
-          ) : userType === 'Employee' ? (
-            <EmployerSignUpForm showToast={handleToast} />
-          ) : (
-            <CandidateSignUpForm showToast={handleToast} />
-          )}
+              <CandidateSignUpForm showToast={handleToast} />
+            )}
+          </View>
         </>
       )}
     </View>
@@ -66,6 +69,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Light.PRIMARY,
+  },
+  loginContainer: {
+    flex: 1,
     paddingHorizontal: 20,
   },
 });

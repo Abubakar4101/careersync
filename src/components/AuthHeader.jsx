@@ -1,30 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Colors, Fonts } from '../utils/CustomCss';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {Colors, Fonts} from '../utils/CustomCss';
 
-const AuthHeader = ({ onSignInPress, onSignUpPress, activeForm }) => {
-
+const AuthHeader = ({onSignInPress, onSignUpPress, activeForm}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          activeForm === 'SignIn' && styles.activeButton,
-        ]}
-        onPress={onSignInPress}
-      >
+      <TouchableHighlight
+        underlayColor={Colors.Light.PRIMARY}
+        style={[styles.button, activeForm === 'SignIn' && styles.activeButton]}
+        onPress={onSignInPress}>
         <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
 
-      <TouchableOpacity
-        style={[
-          styles.button,
-          activeForm === 'SignUp' && styles.activeButton,
-        ]}
-        onPress={onSignUpPress}
-      >
+      <TouchableHighlight
+        underlayColor={Colors.Light.PRIMARY}
+        style={[styles.button, activeForm === 'SignUp' && styles.activeButton]}
+        onPress={onSignUpPress}>
         <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   );
 };
@@ -39,7 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: Colors.Light.PRIMARY,
     elevation: 4,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   button: {
     padding: 20,
